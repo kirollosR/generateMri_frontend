@@ -3,8 +3,8 @@ import t1 from "../assets/demoData/t1/BraTS-GLI-00145-000-t1n.nii.gz";
 
 const fileLists = {
   t1: [
-    { name: "BraTS-GLI-00145-000-t1n.nii.gz", path: "/demoData\\t1\\BraTS-GLI-00145-000-t1n.nii.gz" },
-    { name: "BraTS-GLI-00145-000-t1n.nii.gz", path: t1 }
+    { name: "BraTS-GLI-00145-000-t1n.nii.gz", path: t1 },
+    { name: "file1_t1.nii", path: "file1_t1.nii" }
   ],
   t2: [
     { name: "file1_t2.nii", path: "file1_t2.nii" },

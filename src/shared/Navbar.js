@@ -1,5 +1,6 @@
 import React from "react";
-import logo from '../assets/brain-icon.svg'
+// import logo from '../assets/brain-icon.svg'
+import logo from '../assets/logo.svg'
 
 const Navbar = () => {
   return (
@@ -12,12 +13,12 @@ const Navbar = () => {
           >
             <img
               src={logo}
-              class="h-20"
+              class="h-32"
               alt="Flowbite Logo"
             />
-            <span class="self-center text-6xl font-semibold whitespace-nowrap text-white">
+            {/* <span class="self-center text-6xl font-semibold whitespace-nowrap text-white">
               Braini
-            </span>
+            </span> */}
           </a>
         </div>
       </nav>

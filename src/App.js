@@ -5,58 +5,64 @@ import {
   Outlet,
   createRoutesFromElements,
   Route,
-  ScrollRestoration,
   Navigate,
 } from "react-router-dom";
 import "./App.css";
-import FormComponent from "./components/FormComponent";
+import Home from "./pages/Home";
 import UploadAndDownload from "./components/UploadAndDownload";
+import Response from "./pages/Response";
 import Navbar from "./shared/Navbar";
-import Home from "./components/Home";
 import Footer from "./shared/Footer";
+import ProtectedRoute from "./middleware/ProtectedRoute";
+import { AccessProvider } from "./middleware/AccessProvider";
 
-const Layout = () => {
-  return (
-    <div>
-      <Navbar />
+const Layout = () => (
+  <div className="min-h-screen">
+    <Navbar />
+    <div className="flex items-center justify-center text-white pb-4">
       <Outlet />
-      <Footer />
     </div>
-  );
-};
+    <Footer />
+  </div>
+);
+
+const ResponseLayout = () => (
+  <div className="min-h-screen">
+    <div>
+      <Outlet />
+    </div>
+    <Footer />
+  </div>
+);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route element={<Layout />}>
-      <Route path="/" element={<FormComponent />} />
-      <Route path="upload" element={<UploadAndDownload />} />
-      <Route path="/home" element={<Home />} />
-    </Route>
+    <>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="upload" element={<UploadAndDownload />} />
+      </Route>
+      <Route element={<ResponseLayout />}>
+        <Route
+          path="/result"
+          element={
+            <ProtectedRoute>
+              <Response />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+    </>
   )
 );
 
 function App() {
   return (
     <div className="App">
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header> */}
-      {/* <Navbar /> */}
-      <div className="flex items-center justify-center min-h-screen bg-gray-950 text-white">
-        {/* <FormComponent /> */}
-        {/* <UploadAndDownload /> */}
-        <RouterProvider router={router} />
+      <div className="bg-black">
+        <AccessProvider>
+          <RouterProvider router={router} />
+        </AccessProvider>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { FaFileAlt } from "react-icons/fa";
 import "tailwindcss/tailwind.css";
 
-const Upload = ({ onFileChange }) => {
+const Upload = ({ onFileChange, disabled }) => {
   const [uploadStatus, setUploadStatus] = useState(null);
   const [preview, setPreview] = useState(null);
 
@@ -18,38 +18,31 @@ const Upload = ({ onFileChange }) => {
 
     const file = acceptedFiles[0];
     if (file) {
-      if (file.type !== "image/png") {
+      if (!file.name.endsWith(".nii") && !file.name.endsWith(".nii.gz")) {
         setUploadStatus("error");
         onFileChange(null);
         setPreview(null);
         return;
       }
 
+      console.log('file::', file);
       const previewUrl = URL.createObjectURL(file);
       setPreview(previewUrl);
-      const fileInfo = {
-        status: "success",
-        From_Sequence: "t1",
-        to_sequence: "flair",
-        input_filename: file.name,
-        output_filename: `processed_${file.name}`,
-        output_path: previewUrl,
-      };
-      onFileChange(fileInfo); // Call the parent handler with the file information
+      onFileChange(file); // Call the parent handler with the file information
       setUploadStatus("success");
     }
   };
 
-  const isImageFile = (fileName) => {
-    return /\.(jpg|jpeg|png|gif|bmp)$/.test(fileName);
+  const isNiftiFile = (fileName) => {
+    return /\.nii(\.gz)?$/.test(fileName);
   };
 
   return (
-    <div>
+    <div className={`upload-container ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
       <Dropzone
         onDrop={handleDrop}
         maxFiles={1}
-        accept="image/png"
+        accept=".nii,.nii.gz"
         onDropRejected={() => setUploadStatus("error")}
       >
         {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
@@ -65,13 +58,9 @@ const Upload = ({ onFileChange }) => {
           >
             <input {...getInputProps()} />
             {preview && uploadStatus === "success" ? (
-              isImageFile(preview) ? (
+              isNiftiFile(preview) ? (
                 <div className="relative w-24 h-24 flex items-center justify-center">
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="w-full h-full object-cover rounded-md"
-                  />
+                  <FaFileAlt className="text-gray-500 text-4xl" />
                   <AiOutlineCheckCircle className="text-green-500 text-2xl absolute top-1 right-1" />
                 </div>
               ) : (
@@ -110,7 +99,7 @@ const Upload = ({ onFileChange }) => {
                   <span className="text-primary-500">Upload a file</span> or
                   drag and drop
                 </p>
-                <p className="text-gray-400">PNG, JPG, GIF up to 10MB</p>
+                <p className="text-gray-400">NIFTI files (.nii, .nii.gz) up to 10MB</p>
               </div>
             )}
           </div>
